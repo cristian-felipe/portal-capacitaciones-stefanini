@@ -1,0 +1,83 @@
+<div class="login-container">
+  <!-- Header -->
+  <div class="login-header">
+    <h1 class="app-title">Portal de Capacitaciones</h1>
+    <p class="app-subtitle">Stefanini</p>
+  </div>
+
+  <!-- Login Form -->
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+    <mat-card class="form-card">
+              <mat-card-header>
+                <mat-card-title>Iniciar Sesión</mat-card-title>
+              </mat-card-header>
+
+      <mat-card-content>
+        <!-- Email Field -->
+        <div class="field-container">
+          <label class="field-label">Correo Electrónico</label>
+          <mat-form-field appearance="outline" class="full-width">
+            <input
+              matInput
+              type="email"
+              formControlName="email"
+              placeholder="tu@stefanini.com"
+              autocomplete="email">
+            <mat-error *ngIf="isFieldInvalid('email')">
+              {{ getErrorMessage('email') }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Password Field -->
+        <div class="field-container">
+          <label class="field-label">Contraseña</label>
+          <mat-form-field appearance="outline" class="full-width">
+            <input
+              matInput
+              [type]="hidePassword ? 'password' : 'text'"
+              formControlName="password"
+              placeholder="Tu contraseña"
+              autocomplete="current-password">
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              (click)="hidePassword = !hidePassword"
+              [attr.aria-label]="'Ocultar contraseña'"
+              [attr.aria-pressed]="hidePassword">
+              <span>{{ hidePassword ? '👁️' : '👁️‍🗨️' }}</span>
+            </button>
+            <mat-error *ngIf="isFieldInvalid('password')">
+              {{ getErrorMessage('password') }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Remember Me & Forgot Password -->
+        <div class="form-options">
+          <mat-checkbox class="remember-checkbox" formControlName="rememberMe">
+            Recordarme
+          </mat-checkbox>
+          <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions class="form-actions">
+        <!-- Login Button -->
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          class="login-button full-width"
+          [disabled]="isLoading">
+          <span *ngIf="!isLoading">🔑</span>
+          <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+          <span *ngIf="!isLoading">Iniciar Sesión</span>
+          <span *ngIf="isLoading">Iniciando...</span>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </form>
+
+</div>

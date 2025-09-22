@@ -1,0 +1,461 @@
+.profile-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #1565c0, #1976d2);
+  border-radius: 16px;
+  color: white;
+
+  .profile-info {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(10px);
+
+      .avatar-icon {
+        font-size: 2.5rem;
+        width: 2.5rem;
+        height: 2.5rem;
+      }
+    }
+
+    .profile-details {
+      .profile-name {
+        font-size: 2rem;
+        font-weight: 300;
+        margin: 0 0 0.5rem 0;
+      }
+
+      .profile-email {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin: 0 0 1rem 0;
+      }
+
+      .profile-role {
+        margin-bottom: 0.5rem;
+
+        mat-chip {
+          color: white;
+          font-weight: 500;
+        }
+      }
+
+      .profile-date {
+        font-size: 0.9rem;
+        opacity: 0.8;
+        margin: 0;
+      }
+    }
+  }
+
+  .profile-actions {
+    button {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      
+      &:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+    }
+  }
+}
+
+.stats-section {
+  margin-bottom: 2rem;
+
+  .stats-card {
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+
+      .stat-item {
+        text-align: center;
+        padding: 1rem;
+
+        .stat-number {
+          font-size: 2.5rem;
+          font-weight: 600;
+          color: #1565c0;
+          margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+          font-size: 1rem;
+          color: #666;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+}
+
+.profile-tabs {
+  ::ng-deep {
+    .mat-tab-group {
+      .mat-tab-header {
+        border-bottom: 2px solid #e0e0e0;
+      }
+
+      .mat-tab-label {
+        font-size: 1rem;
+        font-weight: 500;
+        min-width: 150px;
+        
+        &.mat-tab-label-active {
+          color: #1565c0;
+        }
+      }
+
+      .mat-ink-bar {
+        background-color: #1565c0;
+        height: 3px;
+      }
+    }
+  }
+
+  .tab-content {
+    padding: 2rem 0;
+  }
+}
+
+.loading-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 0;
+
+  p {
+    margin-top: 1rem;
+    color: #666;
+  }
+}
+
+.no-courses {
+  text-align: center;
+  padding: 4rem 2rem;
+
+  mat-icon {
+    font-size: 4rem;
+    width: 4rem;
+    height: 4rem;
+    color: #ccc;
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    color: #666;
+    margin: 0 0 0.5rem 0;
+  }
+
+  p {
+    color: #999;
+    margin: 0 0 2rem 0;
+  }
+}
+
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+
+  .course-card {
+    border-radius: 12px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    &.completed {
+      border-left: 4px solid #4caf50;
+    }
+
+    &.enrolled {
+      border-left: 4px solid #ff9800;
+    }
+
+    .course-description {
+      color: #666;
+      line-height: 1.5;
+      margin: 1rem 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .progress-section {
+      margin: 1rem 0;
+
+      .progress-info {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        color: #666;
+
+        .lessons-info {
+          font-size: 0.8rem;
+          color: #999;
+        }
+      }
+    }
+
+    .completion-info {
+      margin: 1rem 0;
+
+      .lessons-info {
+        display: block;
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+        color: #999;
+      }
+    }
+
+    .enrollment-info {
+      margin: 1rem 0;
+
+      .lessons-info {
+        display: block;
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+        color: #999;
+      }
+    }
+
+    .completed-icon {
+      color: #4caf50;
+      margin-right: 0.5rem;
+    }
+
+    .enrolled-icon {
+      color: #ff9800;
+      margin-right: 0.5rem;
+    }
+
+    mat-card-actions {
+      padding: 0 1rem 1rem 1rem;
+      display: flex;
+      justify-content: space-between;
+
+      button {
+        border-radius: 20px;
+        
+        &:first-child {
+          background-color: #f5f5f5;
+          color: #1565c0;
+          
+          &:hover {
+            background-color: #e3f2fd;
+          }
+        }
+
+        &:last-child {
+          color: #666;
+          
+          &:hover {
+            background-color: #f5f5f5;
+          }
+        }
+      }
+    }
+  }
+}
+
+.badges-section {
+  h3 {
+    color: #333;
+    font-size: 1.5rem;
+    margin: 0 0 2rem 0;
+  }
+
+  .badges-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+
+    .badge-card {
+      border-radius: 12px;
+      text-align: center;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      .badge-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem auto;
+        font-size: 1.5rem;
+        color: white;
+        background: linear-gradient(135deg, #ffd700, #ffed4e);
+        
+        img {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+        
+        .default-badge-icon {
+          font-size: 2rem;
+          color: #ff6b35;
+        }
+      }
+
+      .badge-name {
+        color: #333;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin: 0 0 0.5rem 0;
+      }
+
+      .badge-description {
+        color: #666;
+        margin: 0 0 1rem 0;
+        line-height: 1.4;
+      }
+
+      .badge-date {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.25rem;
+        color: #999;
+        font-size: 0.9rem;
+
+        mat-icon {
+          font-size: 1rem;
+          width: 1rem;
+          height: 1rem;
+        }
+      }
+    }
+  }
+  
+  .no-badges {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: #666;
+    
+    mat-icon {
+      font-size: 4rem;
+      width: 4rem;
+      height: 4rem;
+      color: #ddd;
+      margin-bottom: 1rem;
+    }
+    
+    p {
+      font-size: 1.1rem;
+      margin: 0 0 0.5rem 0;
+    }
+    
+    .subtitle {
+      font-size: 0.9rem;
+      color: #999;
+    }
+  }
+}
+
+
+// Responsive design
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 15px;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: center;
+
+    .profile-info {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem !important;
+  }
+
+  .courses-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .badges-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .setting-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem !important;
+
+    .setting-info {
+      text-align: center;
+    }
+  }
+}
+
+// Animaciones
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.course-card,
+.badge-card {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.course-card:nth-child(1),
+.badge-card:nth-child(1) { animation-delay: 0.1s; }
+.course-card:nth-child(2),
+.badge-card:nth-child(2) { animation-delay: 0.2s; }
+.course-card:nth-child(3),
+.badge-card:nth-child(3) { animation-delay: 0.3s; }
+.course-card:nth-child(4),
+.badge-card:nth-child(4) { animation-delay: 0.4s; }
+

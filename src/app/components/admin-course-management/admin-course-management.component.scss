@@ -1,0 +1,214 @@
+.admin-course-management {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 32px;
+  
+  .header-content {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+    
+    .back-button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+  
+  h1 {
+    color: #333;
+    margin-bottom: 8px;
+    font-size: 32px;
+    font-weight: 500;
+  }
+  
+  p {
+    color: #666;
+    font-size: 16px;
+  }
+}
+
+.actions-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.search-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.search-field {
+  min-width: 250px;
+}
+
+.search-type-field {
+  min-width: 150px;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  
+  p {
+    margin-top: 16px;
+    color: #666;
+  }
+}
+
+.programs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.program-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.program-card mat-card-header {
+  margin-bottom: 16px;
+}
+
+.program-card mat-card-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.program-card mat-card-subtitle {
+  color: #666;
+  font-size: 14px;
+}
+
+.description {
+  color: #555;
+  line-height: 1.5;
+  margin-bottom: 16px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.stats {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #666;
+  font-size: 14px;
+  
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.program-card mat-card-actions {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
+  border-top: 1px solid #eee;
+  
+  button {
+    flex: 1;
+    margin: 0 4px;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  
+  .empty-icon {
+    font-size: 80px;
+    height: 80px;
+    width: 80px;
+    color: #ccc;
+    margin-bottom: 24px;
+  }
+  
+  h3 {
+    color: #333;
+    margin-bottom: 12px;
+    font-size: 24px;
+    font-weight: 500;
+  }
+  
+  p {
+    color: #666;
+    margin-bottom: 24px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-course-management {
+    padding: 16px;
+  }
+  
+  .actions-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search-field,
+  .search-type-field {
+    min-width: unset;
+    width: 100%;
+  }
+  
+  .programs-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .program-card mat-card-actions {
+    flex-direction: column;
+    gap: 8px;
+    
+    button {
+      margin: 0;
+    }
+  }
+}

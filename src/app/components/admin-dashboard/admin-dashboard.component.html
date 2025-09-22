@@ -1,0 +1,125 @@
+<div class="admin-dashboard">
+  <div class="dashboard-header">
+    <div class="header-content">
+      <button mat-button color="primary" (click)="goBack()" class="back-button">
+        <mat-icon>arrow_back</mat-icon>
+        Volver al Dashboard
+      </button>
+    </div>
+    <h1>Panel de Administración</h1>
+    <p>Gestiona programas de capacitación y supervisa el contenido educativo</p>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading-container" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+    <p>Cargando estadísticas...</p>
+  </div>
+
+  <!-- Estadísticas -->
+  <div class="stats-grid" *ngIf="!loading">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon class="stat-icon">school</mat-icon>
+          <div class="stat-info">
+            <h3>{{ totalProgramas }}</h3>
+            <p>Programas Totales</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon class="stat-icon">folder</mat-icon>
+          <div class="stat-info">
+            <h3>{{ totalUnidades }}</h3>
+            <p>Unidades Totales</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon class="stat-icon">book</mat-icon>
+          <div class="stat-info">
+            <h3>{{ totalLecciones }}</h3>
+            <p>Lecciones Totales</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Acciones rápidas -->
+  <div class="quick-actions">
+    <h2>Acciones Rápidas</h2>
+    <div class="actions-grid">
+      <mat-card class="action-card" (click)="goToCourseManagement()">
+        <mat-card-content>
+          <mat-icon>add_circle</mat-icon>
+          <h3>Crear Nuevo Programa</h3>
+          <p>Agregar un nuevo programa de capacitación con unidades y lecciones</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="action-card" (click)="goToCourseManagement()">
+        <mat-card-content>
+          <mat-icon>edit</mat-icon>
+          <h3>Gestionar Programas</h3>
+          <p>Editar, eliminar o ver programas existentes</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="action-card">
+        <mat-card-content>
+          <mat-icon>analytics</mat-icon>
+          <h3>Estadísticas</h3>
+          <p>Ver reportes y métricas de uso del sistema</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Programas recientes -->
+  <div class="recent-programs" *ngIf="!loading && programasRecientes.length > 0">
+    <h2>Programas Recientes</h2>
+    <div class="programs-list">
+      <mat-card class="program-item" *ngFor="let programa of programasRecientes" 
+                (click)="goToPrograma(programa)">
+        <mat-card-content>
+          <div class="program-info">
+            <h4>{{ programa.titulo }}</h4>
+            <p class="program-area">{{ programa.areaConocimiento }}</p>
+            <p class="program-description">{{ programa.descripcion }}</p>
+            <div class="program-stats">
+              <span class="stat">
+                <mat-icon>folder</mat-icon>
+                {{ programa.unidades ? programa.unidades.length : 0 }} Unidades
+              </span>
+              <span class="stat">
+                <mat-icon>book</mat-icon>
+                {{ getTotalLecciones(programa) }} Lecciones
+              </span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div class="empty-state" *ngIf="!loading && programasRecientes.length === 0">
+    <mat-icon class="empty-icon">school</mat-icon>
+    <h3>No hay programas creados</h3>
+    <p>Comienza creando tu primer programa de capacitación</p>
+    <button mat-raised-button color="primary" (click)="goToCourseManagement()">
+      <mat-icon>add</mat-icon>
+      Crear Primer Programa
+    </button>
+  </div>
+</div>
