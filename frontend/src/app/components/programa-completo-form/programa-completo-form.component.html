@@ -1,0 +1,331 @@
+<div class="programa-form-container">
+  <div class="form-header">
+    <h2>{{ isEditMode ? 'Editar Programa' : 'Crear Nuevo Programa' }}</h2>
+    <p>Configura el programa completo con sus unidades y lecciones</p>
+  </div>
+
+  <form [formGroup]="programaForm" (ngSubmit)="onSubmit()" class="programa-form">
+    <!-- Información básica del programa -->
+    <mat-card class="form-section">
+      <mat-card-header>
+        <mat-card-title>Información del Programa</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="titulo">Título del Programa</label>
+            <input 
+              type="text" 
+              id="titulo"
+              formControlName="titulo" 
+              placeholder="Ej: Curso de Angular Avanzado"
+              class="form-control"
+              [class.error]="programaForm.get('titulo')?.invalid && programaForm.get('titulo')?.touched">
+            <div class="error-message" *ngIf="programaForm.get('titulo')?.invalid && programaForm.get('titulo')?.touched">
+              {{ getErrorMessage('titulo') }}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="descripcion">Descripción</label>
+            <textarea 
+              id="descripcion"
+              formControlName="descripcion" 
+              rows="4" 
+              placeholder="Describe el contenido y objetivos del programa"
+              class="form-control"
+              [class.error]="programaForm.get('descripcion')?.invalid && programaForm.get('descripcion')?.touched"></textarea>
+            <div class="error-message" *ngIf="programaForm.get('descripcion')?.invalid && programaForm.get('descripcion')?.touched">
+              {{ getErrorMessage('descripcion') }}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="areaConocimiento">Área de Conocimiento</label>
+            <select 
+              id="areaConocimiento"
+              formControlName="areaConocimiento"
+              class="form-control"
+              [class.error]="programaForm.get('areaConocimiento')?.invalid && programaForm.get('areaConocimiento')?.touched">
+              <option value="">Selecciona un área</option>
+              <option *ngFor="let area of areasConocimiento" [value]="area">
+                {{ area }}
+              </option>
+            </select>
+            <div class="error-message" *ngIf="programaForm.get('areaConocimiento')?.invalid && programaForm.get('areaConocimiento')?.touched">
+              {{ getErrorMessage('areaConocimiento') }}
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Unidades del programa -->
+    <mat-card class="form-section">
+      <mat-card-header>
+        <mat-card-title>Unidades del Programa</mat-card-title>
+        <button mat-icon-button color="primary" type="button" (click)="addUnidad()">
+          <mat-icon>add</mat-icon>
+        </button>
+      </mat-card-header>
+      <mat-card-content>
+        <div formArrayName="unidades" class="unidades-container">
+          <div *ngFor="let unidad of unidadesArray.controls; let i = index" 
+               [formGroupName]="i" class="unidad-item">
+            
+            <mat-expansion-panel class="unidad-panel">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <span class="unidad-title">Unidad {{ i + 1 }}</span>
+                  <span class="unidad-titulo" *ngIf="unidad.get('titulo')?.value">
+                    - {{ unidad.get('titulo')?.value }}
+                  </span>
+                </mat-panel-title>
+                <mat-panel-description>
+                  {{ getLeccionesCount(unidad) }} lecciones
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+
+              <div class="unidad-content">
+                <!-- Controles de la unidad -->
+                <div class="unidad-controls">
+                  <button mat-icon-button type="button" (click)="moveUnidadUp(i)" 
+                          [disabled]="i === 0" matTooltip="Mover arriba">
+                    <mat-icon>keyboard_arrow_up</mat-icon>
+                  </button>
+                  <button mat-icon-button type="button" (click)="moveUnidadDown(i)" 
+                          [disabled]="i === unidadesArray.length - 1" matTooltip="Mover abajo">
+                    <mat-icon>keyboard_arrow_down</mat-icon>
+                  </button>
+                  <button mat-icon-button color="warn" type="button" (click)="removeUnidad(i)" 
+                          [disabled]="unidadesArray.length === 1" matTooltip="Eliminar unidad">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+
+                <!-- Formulario de la unidad -->
+                <div class="form-row">
+                  <div class="form-group">
+                    <label [for]="'unidad-titulo-' + i">Título de la Unidad</label>
+                    <input 
+                      type="text" 
+                      [id]="'unidad-titulo-' + i"
+                      formControlName="titulo" 
+                      placeholder="Ej: Fundamentos de Angular"
+                      class="form-control"
+                      [class.error]="unidad.get('titulo')?.invalid && unidad.get('titulo')?.touched">
+                    <div class="error-message" *ngIf="unidad.get('titulo')?.invalid && unidad.get('titulo')?.touched">
+                      {{ getUnidadErrorMessage(i, 'titulo') }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label [for]="'unidad-descripcion-' + i">Descripción de la Unidad</label>
+                    <textarea 
+                      [id]="'unidad-descripcion-' + i"
+                      formControlName="descripcion" 
+                      rows="3" 
+                      placeholder="Describe el contenido de esta unidad"
+                      class="form-control"
+                      [class.error]="unidad.get('descripcion')?.invalid && unidad.get('descripcion')?.touched"></textarea>
+                    <div class="error-message" *ngIf="unidad.get('descripcion')?.invalid && unidad.get('descripcion')?.touched">
+                      {{ getUnidadErrorMessage(i, 'descripcion') }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group order-field">
+                    <label [for]="'unidad-orden-' + i">Orden</label>
+                    <input 
+                      type="number" 
+                      [id]="'unidad-orden-' + i"
+                      formControlName="orden" 
+                      min="1"
+                      class="form-control"
+                      [class.error]="unidad.get('orden')?.invalid && unidad.get('orden')?.touched">
+                    <div class="error-message" *ngIf="unidad.get('orden')?.invalid && unidad.get('orden')?.touched">
+                      {{ getUnidadErrorMessage(i, 'orden') }}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Lecciones de la unidad -->
+                <div class="lecciones-section">
+                  <div class="lecciones-header">
+                    <h4>Lecciones</h4>
+                    <button mat-raised-button color="accent" type="button" 
+                            (click)="addLeccionToUnidad(i)">
+                      <mat-icon>add</mat-icon>
+                      Agregar Lección
+                    </button>
+                  </div>
+
+                  <div formArrayName="lecciones" class="lecciones-container">
+                    <div *ngFor="let leccion of getLeccionesArray(unidad).controls; let j = index" 
+                         [formGroupName]="j" class="leccion-item">
+                      
+                      <mat-card class="leccion-card">
+                        <mat-card-header>
+                          <mat-card-title>Lección {{ j + 1 }}</mat-card-title>
+                          <div class="leccion-controls">
+                            <button mat-icon-button type="button" (click)="moveLeccionUp(i, j)" 
+                                    [disabled]="j === 0" matTooltip="Mover arriba">
+                              <mat-icon>keyboard_arrow_up</mat-icon>
+                            </button>
+                            <button mat-icon-button type="button" (click)="moveLeccionDown(i, j)" 
+                                    [disabled]="j === getLeccionesArray(unidad).length - 1" matTooltip="Mover abajo">
+                              <mat-icon>keyboard_arrow_down</mat-icon>
+                            </button>
+                            <button mat-icon-button color="warn" type="button" 
+                                    (click)="removeLeccion(i, j)" 
+                                    [disabled]="getLeccionesArray(unidad).length === 1" 
+                                    matTooltip="Eliminar lección">
+                              <mat-icon>delete</mat-icon>
+                            </button>
+                          </div>
+                        </mat-card-header>
+                        
+                        <mat-card-content>
+                          <div class="form-row">
+                            <div class="form-group">
+                              <label [for]="'leccion-titulo-' + i + '-' + j">Título de la Lección</label>
+                              <input 
+                                type="text" 
+                                [id]="'leccion-titulo-' + i + '-' + j"
+                                formControlName="titulo" 
+                                placeholder="Ej: Introducción a Angular"
+                                class="form-control"
+                                [class.error]="leccion.get('titulo')?.invalid && leccion.get('titulo')?.touched">
+                              <div class="error-message" *ngIf="leccion.get('titulo')?.invalid && leccion.get('titulo')?.touched">
+                                {{ getLeccionErrorMessage(i, j, 'titulo') }}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="form-row">
+                            <div class="form-group">
+                              <label [for]="'leccion-descripcion-' + i + '-' + j">Descripción de la Lección</label>
+                              <textarea 
+                                [id]="'leccion-descripcion-' + i + '-' + j"
+                                formControlName="descripcion" 
+                                rows="2" 
+                                placeholder="Describe el contenido de esta lección"
+                                class="form-control"
+                                [class.error]="leccion.get('descripcion')?.invalid && leccion.get('descripcion')?.touched"></textarea>
+                              <div class="error-message" *ngIf="leccion.get('descripcion')?.invalid && leccion.get('descripcion')?.touched">
+                                {{ getLeccionErrorMessage(i, j, 'descripcion') }}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="form-row">
+                            <div class="form-group order-field">
+                              <label [for]="'leccion-orden-' + i + '-' + j">Orden</label>
+                              <input 
+                                type="number" 
+                                [id]="'leccion-orden-' + i + '-' + j"
+                                formControlName="orden" 
+                                min="1"
+                                class="form-control"
+                                [class.error]="leccion.get('orden')?.invalid && leccion.get('orden')?.touched">
+                              <div class="error-message" *ngIf="leccion.get('orden')?.invalid && leccion.get('orden')?.touched">
+                                {{ getLeccionErrorMessage(i, j, 'orden') }}
+                              </div>
+                            </div>
+
+                            <div class="form-group tipo-field">
+                              <label [for]="'leccion-tipo-' + i + '-' + j">Tipo de Material</label>
+                              <select 
+                                [id]="'leccion-tipo-' + i + '-' + j"
+                                formControlName="tipoMaterial"
+                                class="form-control"
+                                [class.error]="leccion.get('tipoMaterial')?.invalid && leccion.get('tipoMaterial')?.touched">
+                                <option value="">Selecciona un tipo</option>
+                                <option *ngFor="let tipo of tiposMaterial" [value]="tipo.value">
+                                  {{ tipo.label }}
+                                </option>
+                              </select>
+                              <div class="error-message" *ngIf="leccion.get('tipoMaterial')?.invalid && leccion.get('tipoMaterial')?.touched">
+                                {{ getLeccionErrorMessage(i, j, 'tipoMaterial') }}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="form-row">
+                            <div class="form-group">
+                              <label [for]="'leccion-url-' + i + '-' + j">URL del Material</label>
+                              <input 
+                                type="url" 
+                                [id]="'leccion-url-' + i + '-' + j"
+                                formControlName="urlMaterial" 
+                                placeholder="https://ejemplo.com/material"
+                                class="form-control"
+                                [class.error]="leccion.get('urlMaterial')?.invalid && leccion.get('urlMaterial')?.touched">
+                              <div class="error-message" *ngIf="leccion.get('urlMaterial')?.invalid && leccion.get('urlMaterial')?.touched">
+                                {{ getLeccionErrorMessage(i, j, 'urlMaterial') }}
+                              </div>
+                              <div class="error-message" *ngIf="leccion.get('urlMaterial')?.hasError('urlOrFileRequired')">
+                                Debes proporcionar una URL o subir un archivo
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="form-row">
+                            <div class="form-group file-upload-group">
+                              <label>Archivo Adjunto (Opcional)</label>
+                              <div class="file-upload-container">
+                                <input 
+                                  type="file" 
+                                  [id]="'leccion-archivo-' + i + '-' + j"
+                                  (change)="onFileSelected($event, i, j)"
+                                  accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,.jpg,.jpeg,.png,.gif"
+                                  class="file-input"
+                                  [disabled]="isUploadingFile(i, j)">
+                                
+                                <div class="file-info" *ngIf="leccion.get('archivoId')?.value">
+                                  <span class="file-name">{{ getFileName(i, j) }}</span>
+                                  <button type="button" class="btn-remove-file" (click)="removeFile(i, j)">
+                                    <mat-icon>close</mat-icon>
+                                  </button>
+                                </div>
+                                
+                                <div class="upload-progress" *ngIf="isUploadingFile(i, j)">
+                                  <mat-spinner diameter="20"></mat-spinner>
+                                  <span>Subiendo archivo...</span>
+                                </div>
+                              </div>
+                              <small class="file-help-text">
+                                Formatos permitidos: PDF, DOC, DOCX, PPT, PPTX, XLS, XLSX, TXT, JPG, JPEG, PNG, GIF
+                              </small>
+                            </div>
+                          </div>
+                        </mat-card-content>
+                      </mat-card>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="loading">
+        Cancelar
+      </button>
+      <button type="submit" class="btn btn-primary" [disabled]="loading">
+        <span *ngIf="loading" class="spinner"></span>
+        {{ isEditMode ? 'Actualizar' : 'Crear' }} Programa
+      </button>
+    </div>
+  </form>
+</div>

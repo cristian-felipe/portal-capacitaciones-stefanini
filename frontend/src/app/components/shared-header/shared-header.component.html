@@ -1,0 +1,41 @@
+<mat-toolbar class="shared-header">
+  <mat-toolbar-row>
+    <div class="header-content">
+      <div class="logo-section">
+        <span class="app-title">Portal de Capacitaciones</span>
+      </div>
+      
+      <div class="navigation-section" *ngIf="isAuthenticated()">
+        <button mat-button routerLink="/dashboard" routerLinkActive="active">
+          <mat-icon>dashboard</mat-icon>
+          Dashboard
+        </button>
+        <button mat-button routerLink="/courses" routerLinkActive="active">
+          <mat-icon>school</mat-icon>
+          Cursos
+        </button>
+        <button mat-button routerLink="/admin" routerLinkActive="active" 
+                *ngIf="isAdmin()" matTooltip="Panel de administración">
+          <mat-icon>admin_panel_settings</mat-icon>
+          Administración
+        </button>
+      </div>
+      
+      <div class="user-section">
+        <div class="user-info">
+          <span class="user-name">{{ getWelcomeMessage() }}</span>
+          <span class="user-role">{{ getUserRole() }}</span>
+        </div>
+        <div class="user-actions">
+          <button mat-icon-button routerLink="/profile" matTooltip="Mi Perfil">
+            <mat-icon>person</mat-icon>
+          </button>
+          <button mat-icon-button (click)="logout()" matTooltip="Cerrar Sesión">
+            <mat-icon>logout</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </mat-toolbar-row>
+</mat-toolbar>
+

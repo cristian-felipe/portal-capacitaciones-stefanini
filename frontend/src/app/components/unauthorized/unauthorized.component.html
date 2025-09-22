@@ -1,0 +1,19 @@
+<div class="unauthorized-container">
+  <div class="unauthorized-card">
+    <mat-icon class="error-icon">block</mat-icon>
+    <h1>Acceso Denegado</h1>
+    <p>No tienes permisos para acceder a esta sección.</p>
+    <p>Contacta al administrador si crees que esto es un error.</p>
+    
+    <div class="actions">
+      <button mat-raised-button color="primary" (click)="goToDashboard()">
+        <mat-icon>dashboard</mat-icon>
+        Ir al Dashboard
+      </button>
+      <button mat-button (click)="goToLogin()">
+        <mat-icon>login</mat-icon>
+        Cerrar Sesión
+      </button>
+    </div>
+  </div>
+</div>

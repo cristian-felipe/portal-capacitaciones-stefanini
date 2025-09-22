@@ -1,0 +1,106 @@
+<div class="admin-course-management">
+  <div class="header">
+    <div class="header-content">
+      <button mat-button color="primary" (click)="goBack()" class="back-button">
+        <mat-icon>arrow_back</mat-icon>
+        Volver al Dashboard
+      </button>
+    </div>
+    <h1>Gestión de Programas de Capacitación</h1>
+    <p>Administra programas completos con sus unidades y lecciones</p>
+  </div>
+
+  <!-- Search and Actions Bar -->
+  <div class="actions-bar">
+    <div class="search-section">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Buscar programas</mat-label>
+        <input matInput [(ngModel)]="searchTerm" (keyup.enter)="searchProgramas()" 
+               placeholder="Ingresa término de búsqueda">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline" class="search-type-field">
+        <mat-label>Buscar por</mat-label>
+        <mat-select [(ngModel)]="searchBy">
+          <mat-option value="titulo">Título</mat-option>
+          <mat-option value="area">Área de Conocimiento</mat-option>
+        </mat-select>
+      </mat-form-field>
+      
+      <button mat-raised-button color="primary" (click)="searchProgramas()" [disabled]="loading">
+        <mat-icon>search</mat-icon>
+        Buscar
+      </button>
+      
+      <button mat-button (click)="clearSearch()" *ngIf="searchTerm">
+        <mat-icon>clear</mat-icon>
+        Limpiar
+      </button>
+    </div>
+    
+    <button mat-raised-button color="accent" (click)="openCreateDialog()">
+      <mat-icon>add</mat-icon>
+      Nuevo Programa
+    </button>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div class="loading-container" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+    <p>Cargando programas...</p>
+  </div>
+
+  <!-- Programs Grid -->
+  <div class="programs-grid" *ngIf="!loading">
+    <mat-card class="program-card" *ngFor="let programa of filteredProgramas">
+      <mat-card-header>
+        <mat-card-title>{{ programa.titulo }}</mat-card-title>
+        <mat-card-subtitle>{{ programa.areaConocimiento }}</mat-card-subtitle>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <p class="description">{{ programa.descripcion }}</p>
+        
+        <div class="stats">
+          <div class="stat">
+            <mat-icon>folder</mat-icon>
+            <span>{{ getTotalUnidades(programa) }} Unidades</span>
+          </div>
+          <div class="stat">
+            <mat-icon>book</mat-icon>
+            <span>{{ getTotalLecciones(programa) }} Lecciones</span>
+          </div>
+        </div>
+      </mat-card-content>
+      
+      <mat-card-actions>
+        <button mat-button color="primary" (click)="viewPrograma(programa)">
+          <mat-icon>visibility</mat-icon>
+          Ver
+        </button>
+        <button mat-button color="accent" (click)="openEditDialog(programa)">
+          <mat-icon>edit</mat-icon>
+          Editar
+        </button>
+        <button mat-button color="warn" (click)="deletePrograma(programa)" [disabled]="loading">
+          <mat-spinner *ngIf="loading" diameter="16"></mat-spinner>
+          <mat-icon *ngIf="!loading">delete</mat-icon>
+          Eliminar
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!loading && filteredProgramas.length === 0">
+    <mat-icon class="empty-icon">school</mat-icon>
+    <h3>No se encontraron programas</h3>
+    <p *ngIf="searchTerm">No hay programas que coincidan con tu búsqueda.</p>
+    <p *ngIf="!searchTerm">Aún no hay programas creados. ¡Crea el primero!</p>
+    <button mat-raised-button color="primary" (click)="openCreateDialog()" *ngIf="!searchTerm">
+      <mat-icon>add</mat-icon>
+      Crear Primer Programa
+    </button>
+  </div>
+</div>

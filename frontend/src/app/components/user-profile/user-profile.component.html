@@ -1,0 +1,287 @@
+<div class="profile-container">
+  <!-- Header compartido -->
+  <app-shared-header></app-shared-header>
+  
+  <!-- Botón para volver al dashboard -->
+  <app-back-to-dashboard variant="default"></app-back-to-dashboard>
+  
+  <!-- Header del perfil -->
+  <div class="profile-header">
+    <div class="profile-info">
+      <div class="profile-avatar">
+        <mat-icon class="avatar-icon">{{ getRolIcon(user?.rol) }}</mat-icon>
+      </div>
+      
+      <div class="profile-details">
+        <h1 class="profile-name">{{ user?.nombre }} {{ user?.apellido }}</h1>
+        <p class="profile-email">{{ user?.correoElectronico }}</p>
+        
+        <div class="profile-role">
+          <mat-chip [style.background-color]="getRolColor(user?.rol)" color="primary">
+            <mat-icon>{{ getRolIcon(user?.rol) }}</mat-icon>
+            {{ getRolDisplayName(user?.rol) }}
+          </mat-chip>
+        </div>
+        
+        <p class="profile-date">
+          Miembro desde: {{ user?.fechaCreacion | date:'MMMM yyyy' }}
+        </p>
+      </div>
+    </div>
+
+    <div class="profile-actions">
+      <button mat-raised-button color="warn" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        Cerrar Sesión
+      </button>
+    </div>
+  </div>
+
+  <!-- Estadísticas -->
+  <div class="stats-section">
+    <mat-card class="stats-card">
+      <mat-card-content>
+        <div *ngIf="isLoading" class="loading-stats">
+          <mat-spinner diameter="30"></mat-spinner>
+          <p>Cargando estadísticas...</p>
+        </div>
+        
+        
+        <div class="stats-grid" *ngIf="userStats && !isLoading">
+          <div class="stat-item">
+            <div class="stat-number">{{ userStats.cursosCompletados }}</div>
+            <div class="stat-label">Cursos Completados</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">{{ userStats.cursosIniciados }}</div>
+            <div class="stat-label">En Progreso</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">{{ userStats.totalCursos }}</div>
+            <div class="stat-label">Total Cursos</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">{{ userStats.progresoPromedio | number:'1.1-1' }}%</div>
+            <div class="stat-label">Progreso Promedio</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">{{ userStats.totalInsignias }}</div>
+            <div class="stat-label">Insignias</div>
+          </div>
+        </div>
+        
+        <div *ngIf="!userStats && !isLoading" class="no-stats">
+          <mat-icon>info</mat-icon>
+          <p>No se pudieron cargar las estadísticas</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Tabs de contenido -->
+  <mat-tab-group [(selectedIndex)]="activeTab" class="profile-tabs">
+    
+    <!-- Tab: Cursos Inscritos -->
+    <mat-tab label="Cursos Inscritos">
+      <div class="tab-content">
+        <div *ngIf="isLoading" class="loading-section">
+          <mat-spinner diameter="40"></mat-spinner>
+          <p>Cargando cursos...</p>
+        </div>
+
+        <div *ngIf="!isLoading && cursosInscritos.length === 0" class="no-courses">
+          <mat-icon>assignment</mat-icon>
+          <h3>No tienes cursos inscritos</h3>
+          <p>Explora nuestro catálogo e inscríbete a un curso</p>
+          <button mat-raised-button color="primary" routerLink="/courses">
+            <mat-icon>explore</mat-icon>
+            Explorar Cursos
+          </button>
+        </div>
+
+        <div *ngIf="!isLoading && cursosInscritos.length > 0" class="courses-grid">
+          <mat-card *ngFor="let curso of cursosInscritos" class="course-card enrolled">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon class="enrolled-icon">assignment</mat-icon>
+                {{ curso.titulo }}
+              </mat-card-title>
+              <mat-card-subtitle>{{ curso.areaConocimiento }}</mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content>
+              <p class="course-description">{{ curso.descripcion }}</p>
+              
+              <div class="enrollment-info">
+                <mat-chip color="accent" selected>
+                  <mat-icon>assignment</mat-icon>
+                  Inscrito
+                </mat-chip>
+              </div>
+            </mat-card-content>
+
+            <mat-card-actions>
+              <button mat-button color="primary" [routerLink]="['/courses', curso.id]">
+                <mat-icon>play_arrow</mat-icon>
+                Comenzar
+              </button>
+              <button mat-button [routerLink]="['/courses', curso.id]">
+                <mat-icon>visibility</mat-icon>
+                Ver Detalles
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Tab: Cursos en Progreso -->
+    <mat-tab label="Cursos en Progreso">
+      <div class="tab-content">
+        <div *ngIf="isLoading" class="loading-section">
+          <mat-spinner diameter="40"></mat-spinner>
+          <p>Cargando cursos...</p>
+        </div>
+
+        <div *ngIf="!isLoading && cursosEnProgreso.length === 0" class="no-courses">
+          <mat-icon>play_lesson</mat-icon>
+          <h3>No tienes cursos en progreso</h3>
+          <p>Explora nuestro catálogo para comenzar tu aprendizaje</p>
+          <button mat-raised-button color="primary" routerLink="/courses">
+            <mat-icon>explore</mat-icon>
+            Explorar Cursos
+          </button>
+        </div>
+
+        <div *ngIf="!isLoading && cursosEnProgreso.length > 0" class="courses-grid">
+          <mat-card *ngFor="let curso of cursosEnProgreso" class="course-card">
+            <mat-card-header>
+              <mat-card-title>{{ curso.titulo }}</mat-card-title>
+              <mat-card-subtitle>{{ curso.areaConocimiento }}</mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content>
+              <p class="course-description">{{ curso.descripcion }}</p>
+              
+              <div class="progress-section">
+                <div class="progress-info">
+                  <span>Progreso: {{ calcularProgreso(curso) }}%</span>
+                </div>
+                <mat-progress-bar 
+                  mode="determinate" 
+                  [value]="calcularProgreso(curso)"
+                  [color]="getProgresoColor(calcularProgreso(curso)) === '#4caf50' ? 'primary' : 
+                           getProgresoColor(calcularProgreso(curso)) === '#ff9800' ? 'accent' : 'warn'">
+                </mat-progress-bar>
+              </div>
+            </mat-card-content>
+
+            <mat-card-actions>
+              <button mat-button color="primary" [routerLink]="['/courses', curso.id]">
+                <mat-icon>play_arrow</mat-icon>
+                Continuar
+              </button>
+              <button mat-button [routerLink]="['/courses', curso.id]">
+                <mat-icon>visibility</mat-icon>
+                Ver Detalles
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Tab: Cursos Completados -->
+    <mat-tab label="Cursos Completados">
+      <div class="tab-content">
+        <div *ngIf="!isLoading && cursosCompletados.length === 0" class="no-courses">
+          <mat-icon>library_books</mat-icon>
+          <h3>No has completado cursos aún</h3>
+          <p>Comienza un curso y completa tu primer logro</p>
+          <button mat-raised-button color="primary" routerLink="/courses">
+            <mat-icon>explore</mat-icon>
+            Explorar Cursos
+          </button>
+        </div>
+
+        <div *ngIf="!isLoading && cursosCompletados.length > 0" class="courses-grid">
+          <mat-card *ngFor="let curso of cursosCompletados" class="course-card completed">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon class="completed-icon">check_circle</mat-icon>
+                {{ curso.titulo }}
+              </mat-card-title>
+              <mat-card-subtitle>{{ curso.areaConocimiento }}</mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content>
+              <p class="course-description">{{ curso.descripcion }}</p>
+              
+              <div class="completion-info">
+                <mat-chip color="primary" selected>
+                  <mat-icon>check</mat-icon>
+                  Completado
+                </mat-chip>
+              </div>
+            </mat-card-content>
+
+            <mat-card-actions>
+              <button mat-button color="primary" [routerLink]="['/courses', curso.id]">
+                <mat-icon>replay</mat-icon>
+                Repasar
+              </button>
+              <button mat-button [routerLink]="['/courses', curso.id]">
+                <mat-icon>visibility</mat-icon>
+                Ver Contenido
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Tab: Insignias -->
+    <mat-tab label="Insignias">
+      <div class="tab-content">
+        <div class="badges-section">
+          <h3>🏅 Mis Insignias</h3>
+          
+          <div *ngIf="insigniasUsuario.length === 0" class="no-badges">
+            <mat-icon>emoji_events</mat-icon>
+            <p>No has obtenido insignias aún</p>
+            <p class="subtitle">Completa cursos para ganar insignias</p>
+          </div>
+          
+          <div *ngIf="insigniasUsuario.length > 0" class="badges-grid">
+            <mat-card *ngFor="let insignia of insigniasUsuario" class="badge-card">
+              <mat-card-content>
+                <div class="badge-content">
+                  <div class="badge-icon">
+                    <img *ngIf="insignia.insignia?.url_imagen" 
+                         [src]="insignia.insignia?.url_imagen" 
+                         [alt]="insignia.insignia?.nombre">
+                    <mat-icon *ngIf="!insignia.insignia?.url_imagen" class="default-badge-icon">
+                      emoji_events
+                    </mat-icon>
+                  </div>
+                  <div class="badge-info">
+                    <h4 class="badge-name">{{ insignia.insignia?.nombre }}</h4>
+                    <p class="badge-description">{{ insignia.insignia?.descripcion }}</p>
+                    <div class="badge-date">
+                      <mat-icon>schedule</mat-icon>
+                      Obtenida: {{ insignia.fecha_otorgada | date:'dd/MM/yyyy' }}
+                    </div>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
+
+
+  </mat-tab-group>
+</div>
+
