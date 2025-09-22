@@ -1,0 +1,45 @@
+<div class="dashboard-container">
+  <!-- Header compartido -->
+  <app-shared-header></app-shared-header>
+
+  <!-- Main Content -->
+  <div class="dashboard-content">
+
+    <!-- Main Navigation -->
+    <div class="main-navigation">
+      <div class="nav-grid">
+        <!-- Cursos -->
+        <mat-card class="nav-card primary-card" routerLink="/courses">
+          <mat-card-content>
+            <h3>Cursos</h3>
+            <p>Explorar y tomar cursos de capacitación</p>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Mi Perfil -->
+        <mat-card class="nav-card secondary-card" routerLink="/profile">
+          <mat-card-content>
+            <h3>Mi Perfil</h3>
+            <p>Gestionar información personal y progreso</p>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Administración (solo para admin) -->
+        <mat-card class="nav-card accent-card" *ngIf="currentUser?.rol === 'admin'" routerLink="/admin">
+          <mat-card-content>
+            <h3>Administración</h3>
+            <p>Gestionar usuarios y configuraciones</p>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Mis Cursos (solo para instructor/admin) -->
+        <mat-card class="nav-card accent-card" *ngIf="currentUser?.rol === 'instructor' || currentUser?.rol === 'admin'" routerLink="/my-courses">
+          <mat-card-content>
+            <h3>Mis Cursos</h3>
+            <p>Crear y gestionar cursos</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,269 @@
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #1565c0; /* Azul oscuro */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  .app-title {
+    color: white;
+    font-size: 2rem;
+    font-weight: 300;
+    margin: 0 0 0.5rem 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .app-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.1rem;
+    margin: 0;
+    font-weight: 300;
+  }
+}
+
+.login-form {
+  width: 100%;
+  max-width: 450px;
+
+  .field-container {
+    margin-bottom: 1rem;
+
+    .field-label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  mat-form-field {
+    margin-bottom: 0;
+    width: 100%;
+    height: 56px; // Altura fija para ambos campos
+
+    &.mat-form-field-appearance-outline {
+      .mat-form-field-outline {
+        color: #e0e0e0;
+      }
+
+      &.mat-focused .mat-form-field-outline-thick {
+        color: #1565c0;
+      }
+
+      // Evitar fondo amarillo en campos con error
+      .mat-form-field-outline-start,
+      .mat-form-field-outline-end,
+      .mat-form-field-outline-gap {
+        background-color: white !important;
+      }
+
+      .mat-input-element {
+        background-color: white !important;
+        height: 20px; // Altura fija para el input
+        line-height: 20px;
+        padding: 16px 14px; // Padding consistente
+      }
+
+      // Asegurar que el wrapper tenga la misma altura
+      .mat-form-field-wrapper {
+        height: 56px;
+      }
+
+      .mat-form-field-flex {
+        height: 56px;
+        align-items: center;
+      }
+
+      &.mat-form-field-invalid {
+        .mat-form-field-outline-thick {
+          color: #f44336;
+        }
+      }
+
+      // Estilos para el botón de visibilidad
+      button[mat-icon-button] {
+        span {
+          font-size: 1.2rem;
+          cursor: pointer;
+        }
+      }
+
+      // Asegurar que el label se comporte correctamente
+      .mat-form-field-label {
+        color: #666;
+      }
+
+      &.mat-focused .mat-form-field-label {
+        color: #1565c0;
+      }
+
+      &.mat-form-field-should-float .mat-form-field-label {
+        color: #1565c0;
+      }
+    }
+  }
+}
+
+.form-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+
+  mat-card-header {
+    text-align: center;
+    padding: 2rem 2rem 1rem 2rem;
+
+    mat-card-title {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    mat-card-subtitle {
+      color: #666;
+      font-size: 0.9rem;
+    }
+  }
+
+
+  mat-card-content {
+    padding: 0 2rem 1rem 2rem;
+  }
+
+  mat-card-actions {
+    padding: 1rem 2rem 2rem 2rem;
+  }
+}
+
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem 0;
+
+  .remember-checkbox {
+    ::ng-deep {
+      .mat-checkbox-label {
+        font-size: 0.9rem;
+        color: #333;
+        font-weight: 400;
+      }
+
+      .mat-checkbox-frame {
+        border-color: #e0e0e0;
+        border-width: 2px;
+      }
+
+      .mat-checkbox-checkmark {
+        background-color: #1565c0;
+      }
+
+      .mat-checkbox-checkmark-path {
+        stroke: white;
+        stroke-width: 2px;
+      }
+
+      &.mat-checkbox-checked {
+        .mat-checkbox-background {
+          background-color: #1565c0;
+        }
+      }
+
+      &:hover {
+        .mat-checkbox-frame {
+          border-color: #1565c0;
+        }
+      }
+    }
+  }
+
+  .forgot-password {
+    color: #1565c0;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #0d47a1;
+      text-decoration: underline;
+    }
+  }
+}
+
+.form-actions {
+  .login-button {
+    height: 48px;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 8px;
+    background: #1565c0; /* Azul oscuro */
+    color: white;
+    transition: all 0.3s ease;
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(21, 101, 192, 0.4);
+      background: #0d47a1; /* Azul más oscuro al hover */
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    span {
+      margin-right: 8px;
+      font-size: 1.2rem;
+    }
+
+    mat-spinner {
+      margin-right: 8px;
+    }
+  }
+}
+
+.full-width {
+  width: 100%;
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .login-container {
+    padding: 10px;
+  }
+
+  .login-header {
+    .app-title {
+      font-size: 1.5rem;
+    }
+
+    .app-subtitle {
+      font-size: 1rem;
+    }
+  }
+
+  .form-card {
+    mat-card-header {
+      padding: 1.5rem 1.5rem 1rem 1.5rem;
+    }
+
+    mat-card-content {
+      padding: 0 1.5rem 1rem 1.5rem;
+    }
+
+    mat-card-actions {
+      padding: 1rem 1.5rem 1.5rem 1.5rem;
+    }
+  }
+}
