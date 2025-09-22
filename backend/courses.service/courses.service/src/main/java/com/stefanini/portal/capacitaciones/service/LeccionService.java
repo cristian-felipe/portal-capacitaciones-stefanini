@@ -3,6 +3,7 @@ package com.stefanini.portal.capacitaciones.service;
 import com.stefanini.portal.capacitaciones.dto.LeccionDTO;
 import com.stefanini.portal.capacitaciones.entity.Leccion;
 import com.stefanini.portal.capacitaciones.entity.Unidad;
+import com.stefanini.portal.capacitaciones.entity.Material;
 import com.stefanini.portal.capacitaciones.repository.LeccionRepository;
 import com.stefanini.portal.capacitaciones.repository.UnidadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class LeccionService {
     @Autowired
     private UnidadRepository unidadRepository;
     
-    // Crear lección
+    
     public LeccionDTO crearLeccion(LeccionDTO leccionDTO) {
         Unidad unidad = unidadRepository.findById(leccionDTO.getUnidadId())
                 .orElseThrow(() -> new RuntimeException("Unidad no encontrada"));
@@ -40,7 +41,6 @@ public class LeccionService {
         return convertirADTO(leccionGuardada);
     }
     
-    // Obtener todas las lecciones de una unidad
     @Transactional(readOnly = true)
     public List<LeccionDTO> obtenerLeccionesPorUnidad(Integer unidadId) {
         return leccionRepository.findByUnidadIdOrderByOrden(unidadId).stream()
@@ -48,21 +48,18 @@ public class LeccionService {
                 .collect(Collectors.toList());
     }
     
-    // Obtener lección por ID
     @Transactional(readOnly = true)
     public Optional<LeccionDTO> obtenerLeccionPorId(Integer id) {
         return leccionRepository.findById(id)
                 .map(this::convertirADTO);
     }
     
-    // Obtener lección completa con unidad y programa
     @Transactional(readOnly = true)
     public Optional<LeccionDTO> obtenerLeccionCompleta(Integer id) {
         return leccionRepository.findByIdWithUnidadAndPrograma(id)
-                .map(this::convertirADTOCompleto);
+                .map(this::convertirADTO);
     }
     
-    // Actualizar lección
     public Optional<LeccionDTO> actualizarLeccion(Integer id, LeccionDTO leccionDTO) {
         return leccionRepository.findById(id)
                 .map(leccion -> {
@@ -76,7 +73,6 @@ public class LeccionService {
                 });
     }
     
-    // Eliminar lección
     public boolean eliminarLeccion(Integer id) {
         if (leccionRepository.existsById(id)) {
             leccionRepository.deleteById(id);
@@ -85,7 +81,6 @@ public class LeccionService {
         return false;
     }
     
-    // Buscar lecciones por tipo de material
     @Transactional(readOnly = true)
     public List<LeccionDTO> buscarPorTipoMaterial(String tipoMaterial) {
         return leccionRepository.findByTipoMaterial(tipoMaterial).stream()
@@ -93,7 +88,6 @@ public class LeccionService {
                 .collect(Collectors.toList());
     }
     
-    // Buscar lecciones por título
     @Transactional(readOnly = true)
     public List<LeccionDTO> buscarPorTitulo(String titulo) {
         return leccionRepository.findByTituloContainingIgnoreCase(titulo).stream()
@@ -101,7 +95,6 @@ public class LeccionService {
                 .collect(Collectors.toList());
     }
     
-    // Obtener lecciones por programa
     @Transactional(readOnly = true)
     public List<LeccionDTO> obtenerLeccionesPorPrograma(Integer programaId) {
         return leccionRepository.findByProgramaId(programaId).stream()
@@ -109,25 +102,21 @@ public class LeccionService {
                 .collect(Collectors.toList());
     }
     
-    // Contar lecciones por unidad
     @Transactional(readOnly = true)
     public Long contarLeccionesPorUnidad(Integer unidadId) {
         return leccionRepository.countByUnidadId(unidadId);
     }
     
-    // Contar lecciones por tipo de material
     @Transactional(readOnly = true)
     public Long contarLeccionesPorTipoMaterial(String tipoMaterial) {
         return leccionRepository.countByTipoMaterial(tipoMaterial);
     }
     
-    // Verificar si existe lección con título en unidad
     @Transactional(readOnly = true)
     public boolean existeLeccionConTituloEnUnidad(String titulo, Integer unidadId) {
         return leccionRepository.existsByTituloIgnoreCaseAndUnidadId(titulo, unidadId);
     }
     
-    // Reordenar lecciones
     public List<LeccionDTO> reordenarLecciones(Integer unidadId, List<Integer> idsOrdenados) {
         List<Leccion> lecciones = leccionRepository.findByUnidadIdOrderByOrden(unidadId);
         
@@ -146,7 +135,6 @@ public class LeccionService {
                 .collect(Collectors.toList());
     }
     
-    // Métodos de conversión
     private LeccionDTO convertirADTO(Leccion leccion) {
         LeccionDTO dto = new LeccionDTO();
         dto.setId(leccion.getId());
@@ -158,7 +146,38 @@ public class LeccionService {
         return dto;
     }
     
-    private LeccionDTO convertirADTOCompleto(Leccion leccion) {
-        return convertirADTO(leccion);
+    
+    @Transactional(readOnly = true)
+    public List<LeccionDTO> obtenerLeccionesCompletasPorUnidad(Integer unidadId) {
+        return leccionRepository.findByUnidadIdOrderByOrden(unidadId).stream()
+                .map(this::convertirADTOConMaterial)
+                .collect(Collectors.toList());
+    }
+    
+    @Transactional(readOnly = true)
+    public Optional<LeccionDTO> obtenerLeccionCompletaConMaterial(Integer id) {
+        return leccionRepository.findById(id)
+                .map(this::convertirADTOConMaterial);
+    }
+    
+    private LeccionDTO convertirADTOConMaterial(Leccion leccion) {
+        LeccionDTO dto = convertirADTO(leccion);
+        
+        // Si la lección tiene material asociado, agregar información completa
+        if (leccion.getMaterial() != null) {
+            Material material = leccion.getMaterial();
+            dto.setMaterialId(material.getId());
+            dto.setMaterialNombreOriginal(material.getNombreOriginal());
+            dto.setMaterialTipoMaterial(material.getTipoMaterial());
+            dto.setMaterialExtension(material.getExtension());
+            dto.setMaterialTamañoBytes(material.getTamañoBytes());
+            dto.setMaterialTamañoFormateado(material.getTamañoFormateado());
+            dto.setMaterialUrlAcceso(material.getUrlAcceso());
+            dto.setMaterialDescripcion(material.getDescripcion());
+            dto.setMaterialS3Uploaded(material.getS3Uploaded());
+            dto.setMaterialS3Key(material.getS3Key());
+        }
+        
+        return dto;
     }
 }

@@ -21,9 +21,9 @@ public interface ProgramaRepository extends JpaRepository<Programa, Integer> {
     // Buscar programas por descripción (búsqueda parcial)
     List<Programa> findByDescripcionContainingIgnoreCase(String descripcion);
     
-    // Obtener programa con sus unidades y lecciones
-    @Query("SELECT p FROM Programa p LEFT JOIN FETCH p.unidades u LEFT JOIN FETCH u.lecciones WHERE p.id = :id")
-    Optional<Programa> findByIdWithUnidadesAndLecciones(@Param("id") Integer id);
+    // Obtener programa con sus unidades (sin lecciones para evitar MultipleBagFetchException)
+    @Query("SELECT p FROM Programa p LEFT JOIN FETCH p.unidades WHERE p.id = :id")
+    Optional<Programa> findByIdWithUnidades(@Param("id") Integer id);
     
     // Obtener todos los programas con sus unidades
     @Query("SELECT p FROM Programa p LEFT JOIN FETCH p.unidades ORDER BY p.fechaCreacion DESC")

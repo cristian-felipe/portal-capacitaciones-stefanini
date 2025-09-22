@@ -31,7 +31,11 @@ public class Leccion {
     private String tipoMaterial; // video, pdf, link
     
     @Column(name = "url_material", columnDefinition = "TEXT")
-    private String urlMaterial;
+    private String urlMaterial; // Para links externos
+    
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "material_id")
+    private Material material; // Para archivos subidos
     
     // Constructores
     public Leccion() {}
@@ -104,6 +108,30 @@ public class Leccion {
     
     public void setUrlMaterial(String urlMaterial) {
         this.urlMaterial = urlMaterial;
+    }
+    
+    public Material getMaterial() {
+        return material;
+    }
+    
+    public void setMaterial(Material material) {
+        this.material = material;
+    }
+    
+    // Métodos de conveniencia adicionales
+    public boolean tieneMaterialSubido() {
+        return material != null;
+    }
+    
+    public boolean esArchivoSubido() {
+        return material != null && material.getActivo();
+    }
+    
+    public String getUrlAcceso() {
+        if (material != null && material.getActivo()) {
+            return material.getUrlAcceso();
+        }
+        return urlMaterial; // Fallback a URL externa
     }
     
     @Override

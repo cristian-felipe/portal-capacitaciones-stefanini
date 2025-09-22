@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: portal_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: admin-stefanini
+      POSTGRES_PASSWORD: stefanini123
+      POSTGRES_DB: portal_capacitaciones
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d # scripts de inicialización
+
+volumes:
+  pgdata:
