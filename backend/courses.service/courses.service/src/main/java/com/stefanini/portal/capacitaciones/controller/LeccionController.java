@@ -42,12 +42,6 @@ public class LeccionController {
                 .orElse(ResponseEntity.notFound().build());
     }
     
-    @GetMapping("/{id}/completo")
-    public ResponseEntity<LeccionDTO> obtenerLeccionCompleta(@PathVariable Integer id) {
-        Optional<LeccionDTO> leccion = leccionService.obtenerLeccionCompleta(id);
-        return leccion.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
     
     @PutMapping("/{id}")
     public ResponseEntity<LeccionDTO> actualizarLeccion(@PathVariable Integer id, 

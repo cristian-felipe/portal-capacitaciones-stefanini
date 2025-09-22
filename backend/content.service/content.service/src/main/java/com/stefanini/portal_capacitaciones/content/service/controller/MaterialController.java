@@ -19,6 +19,21 @@ public class MaterialController {
 
     private static final String ATTACHMENT_DISPOSITION = "attachment";
     
+    @GetMapping("/test")
+    public ResponseEntity<String> test() {
+        return ResponseEntity.ok("Controller funcionando");
+    }
+    
+    @GetMapping
+    public ResponseEntity<?> getAllMaterials() {
+        try {
+            var materials = materialService.getAllMaterials();
+            return ResponseEntity.ok(materials);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+        }
+    }
+    
     @GetMapping("/{id}/download")
     public ResponseEntity<byte[]> downloadFile(@PathVariable Integer id) {
         log.info("Descargando archivo para material ID: {}", id);

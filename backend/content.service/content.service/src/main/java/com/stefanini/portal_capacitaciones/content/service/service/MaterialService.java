@@ -210,7 +210,7 @@ public class MaterialService {
 
         Material material = materialOpt.get();
         
-        if (!material.getS3Uploaded() || material.getS3Key() == null) {
+        if (material.getS3Uploaded() == null || !material.getS3Uploaded() || material.getS3Key() == null) {
             throw new RuntimeException("Material ID " + materialId + " no está disponible en S3");
         }
 
